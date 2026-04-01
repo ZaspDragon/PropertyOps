@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PropertyOps Mobile</title>
+  <meta name="theme-color" content="#2563eb" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="brand-row">
+          <div class="brand-mark">PO</div>
+          <div>
+            <h1>PropertyOps Mobile</h1>
+            <p>Multi-supplier ordering for property teams</p>
+          </div>
+        </div>
+      </div>
+      <button id="installBtn" class="ghost-btn hidden" type="button">Install</button>
+    </header>
+
+    <main class="main-content">
+      <section id="authView" class="view active">
+        <div class="hero-card">
+          <div class="hero-copy">
+            <span class="eyebrow">Blue-chip clean. Warehouse tough.</span>
+            <h2>Order products, track requests, and manage locations in one mobile app.</h2>
+            <p>Built for apartment teams, maintenance crews, and purchasing staff who want one clean place to buy from multiple 3PL suppliers.</p>
+          </div>
+          <form id="loginForm" class="card form-card">
+            <h3>Sign in</h3>
+            <label>
+              <span>Full name</span>
+              <input id="fullName" name="fullName" type="text" required placeholder="Brandon Evanshine" />
+            </label>
+            <label>
+              <span>Business / Property</span>
+              <input id="businessName" name="businessName" type="text" required placeholder="Sunrise Apartments" />
+            </label>
+            <label>
+              <span>Email</span>
+              <input id="email" name="email" type="email" required placeholder="name@email.com" />
+            </label>
+            <label>
+              <span>Primary location</span>
+              <input id="primaryLocation" name="primaryLocation" type="text" required placeholder="Columbus, OH" />
+            </label>
+            <button class="primary-btn" type="submit">Continue</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="appView" class="view">
+        <div class="welcome-panel card">
+          <div>
+            <p class="eyebrow">Welcome back</p>
+            <h2 id="welcomeName">Customer</h2>
+            <p id="welcomeBusiness">Ready to place an order.</p>
+          </div>
+          <button id="logoutBtn" class="ghost-btn" type="button">Log out</button>
+        </div>
+
+        <section class="stats-grid">
+          <article class="stat-card card">
+            <span>Open Orders</span>
+            <strong id="statOpenOrders">0</strong>
+          </article>
+          <article class="stat-card card">
+            <span>Issue Reports</span>
+            <strong id="statIssueReports">0</strong>
+          </article>
+          <article class="stat-card card">
+            <span>Saved Locations</span>
+            <strong id="statLocations">0</strong>
+          </article>
+          <article class="stat-card card">
+            <span>Cart Items</span>
+            <strong id="statCartCount">0</strong>
+          </article>
+        </section>
+
+        <nav class="tab-nav card" aria-label="Main navigation">
+          <button class="tab-btn active" data-tab="dashboard" type="button">Dashboard</button>
+          <button class="tab-btn" data-tab="catalog" type="button">Catalog</button>
+          <button class="tab-btn" data-tab="orders" type="button">Orders</button>
+          <button class="tab-btn" data-tab="issues" type="button">Issues</button>
+          <button class="tab-btn" data-tab="locations" type="button">Locations</button>
+        </nav>
+
+        <section id="dashboardTab" class="tab-view active">
+          <div class="quick-actions-grid">
+            <button class="quick-action card" data-jump="catalog" type="button">
+              <span class="icon-badge">🛒</span>
+              <strong>New Order</strong>
+              <small>Browse suppliers and add products to your cart</small>
+            </button>
+            <button class="quick-action card" data-jump="issues" type="button">
+              <span class="icon-badge">📸</span>
+              <strong>Report an Issue</strong>
+              <small>Damage, wrong item, returns, and defects</small>
+            </button>
+            <button class="quick-action card" data-jump="locations" type="button">
+              <span class="icon-badge">📍</span>
+              <strong>Add Location</strong>
+              <small>Save properties and route future orders faster</small>
+            </button>
+            <button class="quick-action card" data-jump="orders" type="button">
+              <span class="icon-badge">🚚</span>
+              <strong>Track Orders</strong>
+              <small>See status by supplier from request to delivery</small>
+            </button>
+          </div>
+
+          <div class="dashboard-grid">
+            <section class="card">
+              <div class="section-head">
+                <h3>Recent Orders</h3>
+                <button class="text-btn" data-jump="orders" type="button">View all</button>
+              </div>
+              <div id="recentOrders" class="stack-list empty-state-inline">No orders yet.</div>
+            </section>
+
+            <section class="card">
+              <div class="section-head">
+                <h3>Saved Locations</h3>
+                <button class="text-btn" data-jump="locations" type="button">Manage</button>
+              </div>
+              <div id="savedLocationsPreview" class="stack-list empty-state-inline">No saved locations yet.</div>
+            </section>
+          </div>
+        </section>
+
+        <section id="catalogTab" class="tab-view">
+          <div class="card">
+            <div class="section-head section-head-wrap">
+              <div>
+                <h3>Supplier Catalog</h3>
+                <p>Buy from multiple 3PL suppliers in one app.</p>
+              </div>
+              <button id="openCartBtn" class="primary-btn compact" type="button">View Cart (<span id="cartButtonCount">0</span>)</button>
+            </div>
+            <div class="catalog-toolbar">
+              <input id="productSearch" type="search" placeholder="Search SKU, product, category, or supplier" />
+              <select id="supplierFilter">
+                <option value="all">All Suppliers</option>
+              </select>
+              <select id="categoryFilter">
+                <option value="all">All Categories</option>
+              </select>
+            </div>
+            <div id="catalogGrid" class="product-grid"></div>
+          </div>
+        </section>
+
+        <section id="ordersTab" class="tab-view">
+          <div class="card">
+            <div class="section-head">
+              <h3>Order Tracking</h3>
+              <button id="exportOrdersBtn" class="ghost-btn compact" type="button">Export Orders</button>
+            </div>
+            <div id="ordersList" class="stack-list empty-state-inline">No orders submitted yet.</div>
+          </div>
+        </section>
+
+        <section id="issuesTab" class="tab-view">
+          <div class="card">
+            <div class="section-head">
+              <h3>Report an Issue</h3>
+              <p>Log damage, defects, wrong items, or returns. Stored in your browser for real use on GitHub Pages.</p>
+            </div>
+            <form id="issueForm" class="form-grid">
+              <label>
+                <span>Order number</span>
+                <input name="orderNumber" type="text" placeholder="PO-1004" required />
+              </label>
+              <label>
+                <span>Business / Property</span>
+                <input name="propertyName" type="text" placeholder="Sunrise Apartments" required />
+              </label>
+              <label>
+                <span>SKU / Item number</span>
+                <input name="sku" type="text" placeholder="HV-101" required />
+              </label>
+              <label>
+                <span>Product name</span>
+                <input name="productName" type="text" placeholder="MERV 8 Air Filter" required />
+              </label>
+              <label>
+                <span>Issue type</span>
+                <select name="issueType" required>
+                  <option value="">Choose one</option>
+                  <option>Damaged in transit</option>
+                  <option>Wrong item received</option>
+                  <option>Defective product</option>
+                  <option>Over shipment</option>
+                  <option>Customer return</option>
+                </select>
+              </label>
+              <label>
+                <span>Photo</span>
+                <input id="issuePhoto" name="photo" type="file" accept="image/*" />
+              </label>
+              <label class="full-span">
+                <span>Description</span>
+                <textarea name="description" rows="4" placeholder="Describe the issue, damage, or requested action."></textarea>
+              </label>
+              <button class="primary-btn full-span" type="submit">Send Report</button>
+            </form>
+          </div>
+          <div class="card">
+            <div class="section-head">
+              <h3>Saved Reports</h3>
+            </div>
+            <div id="issueList" class="stack-list empty-state-inline">No issue reports yet.</div>
+          </div>
+        </section>
+
+        <section id="locationsTab" class="tab-view">
+          <div class="card">
+            <div class="section-head">
+              <h3>Add Business / Property</h3>
+              <p>Save locations so future orders can route faster.</p>
+            </div>
+            <form id="locationForm" class="form-grid">
+              <label>
+                <span>Business / Property Name</span>
+                <input name="name" type="text" placeholder="Sunrise Apartments" required />
+              </label>
+              <label>
+                <span>Street Address</span>
+                <input name="street" type="text" placeholder="123 Main St" required />
+              </label>
+              <label>
+                <span>City</span>
+                <input name="city" type="text" placeholder="Columbus" required />
+              </label>
+              <label>
+                <span>State</span>
+                <input name="state" type="text" placeholder="OH" maxlength="2" required />
+              </label>
+              <label>
+                <span>ZIP</span>
+                <input name="zip" type="text" placeholder="43232" inputmode="numeric" required />
+              </label>
+              <label>
+                <span>Preferred Supplier</span>
+                <select name="preferredSupplier" id="preferredSupplier"></select>
+              </label>
+              <button class="primary-btn full-span" type="submit">Save Location</button>
+            </form>
+          </div>
+          <div class="card">
+            <div class="section-head">
+              <h3>Saved Locations</h3>
+            </div>
+            <div id="locationsList" class="stack-list empty-state-inline">No saved locations yet.</div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <div id="cartDrawer" class="drawer" aria-hidden="true">
+      <div class="drawer-backdrop" id="cartBackdrop"></div>
+      <div class="drawer-panel">
+        <div class="drawer-head">
+          <div>
+            <h3>Your Cart</h3>
+            <p>Split by supplier automatically</p>
+          </div>
+          <button id="closeCartBtn" class="ghost-btn compact" type="button">Close</button>
+        </div>
+        <div id="cartItems" class="stack-list empty-state-inline">Your cart is empty.</div>
+        <div class="cart-summary card-flat">
+          <div><span>Items</span><strong id="cartSummaryCount">0</strong></div>
+          <div><span>Total</span><strong id="cartSummaryTotal">$0.00</strong></div>
+        </div>
+        <form id="checkoutForm" class="checkout-form">
+          <label>
+            <span>Deliver to</span>
+            <select id="checkoutLocation" required></select>
+          </label>
+          <label>
+            <span>Needed by</span>
+            <input id="checkoutNeededBy" type="date" required />
+          </label>
+          <label>
+            <span>Priority</span>
+            <select id="checkoutPriority" required>
+              <option>Standard</option>
+              <option>Rush</option>
+              <option>Emergency</option>
+            </select>
+          </label>
+          <label>
+            <span>Notes</span>
+            <textarea id="checkoutNotes" rows="3" placeholder="Delivery notes, unit number, dock info, etc."></textarea>
+          </label>
+          <button class="primary-btn" type="submit">Submit Order</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
